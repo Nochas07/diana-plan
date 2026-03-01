@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Diana's Plan">
+<title>Diana's Daily Wellness Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage: #7A9E7E;
+    --sage-light: #B2CCAD;
+    --sage-pale: #EDF3E8;
+    --teal: #2C5F7A;
+    --teal-mid: #4A8FA8;
+    --teal-light: #A8CDD9;
+    --teal-pale: #E8F4F8;
+    --amber: #C8934A;
+    --amber-light: #E8C98A;
+    --amber-pale: #FDF6E8;
+    --rose: #C47B7B;
+    --rose-pale: #FAF0F0;
+    --lav: #8A7AAE;
+    --lav-pale: #F2F0F8;
+    --ink: #1E1E1E;
+    --ink-mid: #444;
+    --ink-light: #666;
+    --ink-faint: #999;
+    --border: #E2E2DA;
+    --cream: #F8F8F4;
+    --white: #FFFFFF;
+    --red: #C04040;
+    --green: #3A8A4A;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(145deg, #1A3F52 0%, #2C5F7A 40%, #3D8B5E 80%, #7A9E7E 100%);
+    padding: calc(var(--safe-top) + 28px) 20px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header-orb {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    pointer-events: none;
+  }
+  .orb1 { width: 200px; height: 200px; top: -80px; right: -60px; }
+  .orb2 { width: 120px; height: 120px; bottom: -40px; left: -20px; }
+
+  .header-eyebrow {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .header-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 34px;
+    font-weight: 300;
+    color: white;
+    line-height: 1.15;
+  }
+  .header-name em { font-style: italic; font-weight: 400; }
+
+  .progress-wrap {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: rgba(255,255,255,0.8);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .progress-text {
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  /* ── NAV ── */
+  .nav {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    box-shadow: 0 1px 12px rgba(0,0,0,0.08);
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    flex: 0 0 auto;
+    padding: 13px 18px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    color: var(--ink-faint);
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .nav-btn.active { color: var(--teal); border-bottom-color: var(--teal); }
+  .nav-indicator { width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.4; }
+
+  /* ── SECTIONS ── */
+  .section { display: none; padding-bottom: calc(var(--safe-bottom) + 24px); }
+  .section.active { display: block; }
+  .inner { padding: 14px 14px 0; max-width: 680px; margin: 0 auto; }
+
+  /* ── COMPLETION BANNER ── */
+  .done-banner {
+    display: none;
+    margin: 14px 14px 0;
+    padding: 18px 20px;
+    background: linear-gradient(135deg, #3D8B5E, #2C5F7A);
+    border-radius: 16px;
+    text-align: center;
+    animation: slideIn 0.4s ease;
+  }
+  .done-banner.show { display: block; }
+  .done-banner h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: white; }
+  .done-banner p { font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 4px; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── TIME BLOCK ── */
+  .block {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.04);
+    animation: riseUp 0.3s ease both;
+  }
+  @keyframes riseUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .block:nth-child(2) { animation-delay: 0.04s; }
+  .block:nth-child(3) { animation-delay: 0.08s; }
+  .block:nth-child(4) { animation-delay: 0.12s; }
+  .block:nth-child(5) { animation-delay: 0.16s; }
+  .block:nth-child(6) { animation-delay: 0.20s; }
+  .block:nth-child(7) { animation-delay: 0.24s; }
+
+  .block-head {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .block-icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px;
+    flex-shrink: 0;
+  }
+  .block-meta { flex: 1; min-width: 0; }
+  .block-time { font-size: 10px; font-weight: 500; letter-spacing: 1.8px; text-transform: uppercase; opacity: 0.55; }
+  .block-title { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 600; line-height: 1.2; margin-top: 1px; }
+  .block-badge { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 20px; background: var(--cream); color: var(--ink-faint); flex-shrink: 0; }
+
+  /* Block themes */
+  .t-dawn .block-head { background: linear-gradient(135deg, #FEF9EE, #FFF5E8); }
+  .t-dawn .block-icon { background: #FDF0D8; }
+  .t-dawn .block-title { color: #7A4A18; }
+  .t-dawn .block-time { color: var(--amber); }
+
+  .t-morning .block-head { background: linear-gradient(135deg, #EAF5FA, #EEF9F4); }
+  .t-morning .block-icon { background: var(--teal-pale); }
+  .t-morning .block-title { color: var(--teal); }
+  .t-morning .block-time { color: var(--teal-mid); }
+
+  .t-mid .block-head { background: linear-gradient(135deg, #EEF5E9, #F2F8EE); }
+  .t-mid .block-icon { background: var(--sage-pale); }
+  .t-mid .block-title { color: #3A6B40; }
+  .t-mid .block-time { color: var(--sage); }
+
+  .t-aft .block-head { background: linear-gradient(135deg, #F4F1FA, #F0EDF8); }
+  .t-aft .block-icon { background: var(--lav-pale); }
+  .t-aft .block-title { color: #5A4A8A; }
+  .t-aft .block-time { color: var(--lav); }
+
+  .t-eve .block-head { background: linear-gradient(135deg, #FBF0F0, #F9EFF6); }
+  .t-eve .block-icon { background: var(--rose-pale); }
+  .t-eve .block-title { color: #8A4A4A; }
+  .t-eve .block-time { color: var(--rose); }
+
+  .t-night .block-head { background: linear-gradient(135deg, #252530, #202535); }
+  .t-night .block-icon { background: rgba(255,255,255,0.07); }
+  .t-night .block-title { color: #E0DCF0; }
+  .t-night .block-time { color: #9090B8; }
+  .t-night .block-badge { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.4); }
+
+  /* ── ITEMS ── */
+  .items { padding: 2px 0 6px; }
+
+  .item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 16px;
+    cursor: pointer;
+    transition: background 0.12s;
+    position: relative;
+  }
+  .item:active { background: rgba(0,0,0,0.025); }
+  .item.done { opacity: 0.45; }
+  .item.done .item-name { text-decoration: line-through; color: var(--ink-faint); }
+
+  .cb {
+    width: 22px; height: 22px;
+    border-radius: 7px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 0px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    background: white;
+  }
+  .item.done .cb { background: var(--sage); border-color: var(--sage); transform: scale(0.95); }
+  .cb svg { opacity: 0; transition: opacity 0.15s; width: 12px; height: 12px; }
+  .item.done .cb svg { opacity: 1; }
+
+  .item-body { flex: 1; min-width: 0; }
+  .item-name { font-size: 13.5px; font-weight: 500; line-height: 1.35; color: var(--ink); }
+  .item-detail { font-size: 12px; color: var(--ink-faint); margin-top: 3px; line-height: 1.5; }
+  .item-tag {
+    font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 10px;
+    flex-shrink: 0; margin-top: 2px;
+    letter-spacing: 0.2px;
+  }
+  .tag-s { background: var(--teal-pale); color: var(--teal); }
+  .tag-f { background: var(--sage-pale); color: #3A6B40; }
+  .tag-a { background: var(--amber-pale); color: #7A4A18; }
+  .tag-m { background: var(--lav-pale); color: #5A4A8A; }
+  .tag-n { background: #FFF0E4; color: #8A4A18; border: 1px solid #E8C8A0; }
+
+  .rule { height: 1px; background: var(--border); margin: 0 16px; opacity: 0.6; }
+
+  /* ── CALLOUT ── */
+  .callout {
+    margin: 4px 14px 10px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    font-size: 12px;
+    line-height: 1.55;
+  }
+  .callout-title { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 4px; }
+  .c-amber { background: var(--amber-pale); color: #6A4010; }
+  .c-amber .callout-title { color: var(--amber); }
+  .c-teal { background: var(--teal-pale); color: #1A3A4A; }
+  .c-teal .callout-title { color: var(--teal-mid); }
+
+  /* ── RESET ── */
+  .reset-btn {
+    display: block;
+    width: calc(100% - 28px);
+    margin: 4px 14px 8px;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1.5px solid var(--border);
+    background: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-faint);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .reset-btn:active { background: var(--cream); color: var(--ink); }
+
+  /* ── SECTION HEADER ── */
+  .sec-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding: 18px 0 10px;
+  }
+
+  /* ── MONITOR CARDS ── */
+  .mcard {
+    background: white;
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.04);
+    animation: riseUp 0.3s ease both;
+  }
+  .mcard h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    color: var(--ink);
+  }
+  .mcard-icon {
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    background: var(--teal-pale);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .mcard p { font-size: 13px; color: var(--ink-light); line-height: 1.6; margin-bottom: 10px; }
+
+  /* Vision buttons */
+  .vision-row { display: flex; gap: 10px; margin-top: 10px; }
+  .vision-btn {
+    flex: 1; padding: 13px 10px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: white;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink-mid);
+  }
+  .vision-btn.ok { background: var(--sage-pale); border-color: var(--sage); color: #2A6030; }
+  .vision-btn.concern { background: var(--rose-pale); border-color: var(--rose); color: #8A2A2A; }
+
+  /* Flush counter */
+  .flush-row { display: flex; align-items: center; gap: 20px; margin-top: 12px; }
+  .count-btn {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: white;
+    font-size: 22px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1;
+  }
+  .count-btn:active { background: var(--teal-pale); border-color: var(--teal-light); }
+  .count-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px;
+    font-weight: 300;
+    color: var(--teal);
+    min-width: 50px;
+    text-align: center;
+    line-height: 1;
+  }
+  .count-lbl { font-size: 12px; color: var(--ink-faint); }
+
+  /* Journal textarea */
+  .journal {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    resize: vertical;
+    min-height: 80px;
+    background: var(--cream);
+    margin-top: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+    line-height: 1.6;
+  }
+  .journal:focus { border-color: var(--teal-light); background: white; }
+
+  /* Steps list */
+  .steps { list-style: none; margin-top: 2px; }
+  .steps li {
+    display: flex;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--ink-light);
+    line-height: 1.5;
+    align-items: flex-start;
+  }
+  .steps li:last-child { border-bottom: none; }
+  .step-num {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--teal);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-num.warn { background: var(--red); }
+  .step-num.check { background: var(--green); font-size: 11px; }
+  .step-num.cross { background: var(--amber); font-size: 11px; }
+  .red { color: var(--red); font-weight: 600; }
+  .green { color: var(--green); font-weight: 600; }
+
+  /* ── TIPS ── */
+  .tip {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.04);
+    animation: riseUp 0.3s ease both;
+  }
+  .tip-head {
+    padding: 14px 18px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .tip-body { padding: 2px 18px 16px; font-size: 13px; color: var(--ink-light); line-height: 1.7; }
+  .tip-body strong { color: var(--ink); }
+
+  /* red flag card */
+  .rf-card {
+    background: white;
+    border-radius: 18px;
+    border-left: 4px solid var(--red);
+    overflow: hidden;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 16px 18px;
+  }
+  .rf-card h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    color: var(--red);
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-orb orb1"></div>
+  <div class="header-orb orb2"></div>
+  <div class="header-eyebrow" id="hDate">Loading date...</div>
+  <div class="header-name">Diana's Daily<br><em>Wellness Plan</em></div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="pFill"></div></div>
+    <div class="progress-text" id="pText">0 of 0</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nav-btn active" onclick="show('day')" id="nb-day"><span class="nav-indicator"></span>My Day</button>
+  <button class="nav-btn" onclick="show('monitor')" id="nb-monitor"><span class="nav-indicator"></span>Monitor</button>
+  <button class="nav-btn" onclick="show('tips')" id="nb-tips"><span class="nav-indicator"></span>Tips &amp; Notes</button>
+</nav>
+
+<!-- ════════════════════ MY DAY ════════════════════ -->
+<div class="section active" id="s-day">
+
+  <div class="done-banner" id="doneBanner">
+    <h3>🌿 Well done, Diana</h3>
+    <p>Every step complete. Rest well tonight.</p>
+  </div>
+
+  <div class="inner">
+
+    <!-- DAWN -->
+    <div class="block t-dawn">
+      <div class="block-head">
+        <div class="block-icon">🌅</div>
+        <div class="block-meta">
+          <div class="block-time">On Waking · Before Getting Up</div>
+          <div class="block-title">Dawn Ritual</div>
+        </div>
+        <div class="block-badge" id="bd-dawn">0/3</div>
+      </div>
+      <div class="callout c-amber">
+        <div class="callout-title">⚡ Vision Check First</div>
+        Cover each eye — look at the door frame. Any waviness? Record in Monitor tab before getting up.
+      </div>
+      <div class="items">
+        <div class="item" onclick="tick(this,'dawn')" id="i0">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Morning Vision Self-Check</div><div class="item-detail">Cover each eye, look at door frame. Waviness or blur? Record in Monitor tab below.</div></div>
+          <div class="item-tag tag-m">Monitor</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'dawn')" id="i1">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Ashwagandha KSM-66 — 300 mg</div><div class="item-detail">On waking, before breakfast. Blunts the morning cortisol peak.</div></div>
+          <div class="item-tag tag-n">NEW</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'dawn')" id="i2">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Rhodiola Rosea — 200–400 mg</div><div class="item-detail">Empty stomach, 30 min before breakfast. Take before 9 am — do not take late in the day.</div></div>
+          <div class="item-tag tag-n">NEW</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BREAKFAST -->
+    <div class="block t-morning">
+      <div class="block-head">
+        <div class="block-icon">🐟</div>
+        <div class="block-meta">
+          <div class="block-time">Breakfast · The Sardine Meal</div>
+          <div class="block-title">Morning Nourishment</div>
+        </div>
+        <div class="block-badge" id="bd-breakfast">0/10</div>
+      </div>
+      <div class="callout c-amber">
+        <div class="callout-title">⚠ DAO Enzyme First</div>
+        Take DAO enzyme 15–20 minutes BEFORE eating — not with the meal. Set a timer now.
+      </div>
+      <div class="items">
+        <div class="item" onclick="tick(this,'breakfast')" id="i3">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">DAO Enzyme — 15–20 min before eating</div><div class="item-detail">Must be in gut before sardines arrive. Set a timer.</div></div>
+          <div class="item-tag tag-s">Supplement</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'breakfast')" id="i4">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Sardines — Primary Protein</div><div class="item-detail">Fat delivery vehicle for all fat-soluble supplements. Add turmeric + black pepper.</div></div>
+          <div class="item-tag tag-f">Food</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'breakfast')" id="i5">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Horse Chestnut — 50–75 mg Aescin</div><div class="item-detail">With sardine meal. Venous tone and capillary permeability control.</div></div>
+          <div class="item-tag tag-s">Supplement</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'breakfast')" id="i6">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Gotu Kola — 60 mg standardised</div><div class="item-detail">With fat (sardine meal). Rebuilds collagen in capillary walls. 6-week cycles with 2-week breaks.</div></div>
+          <div class="item-tag tag-n">NEW</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'breakfast')" id="i7">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Astaxanthin — 4–8 mg</div><div class="item-detail">With fat. Start at 4 mg, increase to 8 mg after 2 weeks. Crosses the blood-retinal barrier.</div></div>
+          <div class="item-tag tag-n">NEW</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'breakfast')" id="i8">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Lutein (20 mg) + Zeaxanthin (2–4 mg)</div><div class="item-detail">With fat. Macular pigment stabilisation. Works with Astaxanthin and Bilberry.</div></div>
+          <div class="item-tag tag-n">NEW</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'breakfast')" id="i9">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Bilberry Extract — 120–240 mg</div><div class="item-detail">With breakfast. Retinal microvasculature and macular support. 25% anthocyanosides.</div></div>
+          <div class="item-tag tag-n">NEW</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'breakfast')" id="i10">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Quercetin + Hesperidin</div><div class="item-detail">With food. Bioflavonoids — strengthen capillary seal and reduce histamine-driven leaks.</div></div>
+          <div class="item-tag tag-s">Supplement</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'breakfast')" id="i11">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Sea Buckthorn</div><div class="item-detail">With fat (sardine meal). Mucosal and vascular membrane support.</div></div>
+          <div class="item-tag tag-s">Supplement</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'breakfast')" id="i12">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Liposomal Vitamin C — 500–750 mg (AM dose)</div><div class="item-detail">Morning dose. Adrenal support and collagen building. Take with Rutin at next fluid window.</div></div>
+          <div class="item-tag tag-s">Supplement</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MID MORNING -->
+    <div class="block t-morning">
+      <div class="block-head">
+        <div class="block-icon">🕙</div>
+        <div class="block-meta">
+          <div class="block-time">Mid Morning · 30 min after Breakfast</div>
+          <div class="block-title">Fluid Window</div>
+        </div>
+        <div class="block-badge" id="bd-midmorn">0/3</div>
+      </div>
+      <div class="callout c-teal">
+        <div class="callout-title">💧 Fluid Divorce Rule</div>
+        All liquids taken strictly 30 minutes away from solid food to prevent rapid transit.
+      </div>
+      <div class="items">
+        <div class="item" onclick="tick(this,'midmorn')" id="i13">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">L-Glutamine — 5 g in water</div><div class="item-detail">Maintains gut tight junctions. Prevents inflammatory triggers entering bloodstream.</div></div>
+          <div class="item-tag tag-s">Supplement</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'midmorn')" id="i14">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Magnesium Glycinate — 150–200 mg elemental</div><div class="item-detail">Powder in water preferred (best absorption with SBS). Supports smooth muscle and gut lining.</div></div>
+          <div class="item-tag tag-s">Supplement</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'midmorn')" id="i15">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Rutin — 250 mg (morning dose)</div><div class="item-detail">Most targeted intervention for petechiae. Allow 4–6 weeks for visible improvement.</div></div>
+          <div class="item-tag tag-n">NEW</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MIDDAY -->
+    <div class="block t-mid">
+      <div class="block-head">
+        <div class="block-icon">☀️</div>
+        <div class="block-meta">
+          <div class="block-time">Midday · Lunch</div>
+          <div class="block-title">Nourishment &amp; Movement</div>
+        </div>
+        <div class="block-badge" id="bd-midday">0/3</div>
+      </div>
+      <div class="items">
+        <div class="item" onclick="tick(this,'midday')" id="i16">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Gluten-Free Lunch</div><div class="item-detail">Prioritise: buckwheat, blueberries, pumpkin seeds. Add olive oil or coconut oil for fat. Turmeric + black pepper where possible. 100% gluten-free always.</div></div>
+          <div class="item-tag tag-f">Food</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'midday')" id="i17">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Leg Elevation — 20 minutes</div><div class="item-detail">After lunch. Reduces hydrostatic pressure on lower-limb capillaries. Rest and recover.</div></div>
+          <div class="item-tag tag-a">Action</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'midday')" id="i18">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Sage Tincture (if flush this morning)</div><div class="item-detail">As needed for hot flush management. Vasomotor buffer during HRT taper preparation.</div></div>
+          <div class="item-tag tag-s">Supplement</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFTERNOON -->
+    <div class="block t-aft">
+      <div class="block-head">
+        <div class="block-icon">🌿</div>
+        <div class="block-meta">
+          <div class="block-time">Afternoon · 30 min after Lunch</div>
+          <div class="block-title">Afternoon Fluid Window</div>
+        </div>
+        <div class="block-badge" id="bd-aft">0/3</div>
+      </div>
+      <div class="items">
+        <div class="item" onclick="tick(this,'aft')" id="i19">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Liposomal Vitamin C — 500–750 mg (PM dose)</div><div class="item-detail">Split dosing maintains steadier tissue saturation. Works synergistically with Rutin.</div></div>
+          <div class="item-tag tag-s">Supplement</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'aft')" id="i20">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Rutin — 250 mg (afternoon dose)</div><div class="item-detail">Second dose maintains steady blood levels for continuous capillary repair through the day.</div></div>
+          <div class="item-tag tag-n">NEW</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'aft')" id="i21">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Resistance Band Exercises — Rotator Cuff</div><div class="item-detail">Prescribed exercises. No NSAIDs — these worsen gut permeability and are contraindicated with SBS and Coeliac.</div></div>
+          <div class="item-tag tag-a">Action</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVENING -->
+    <div class="block t-eve">
+      <div class="block-head">
+        <div class="block-icon">🌆</div>
+        <div class="block-meta">
+          <div class="block-time">Evening · Dinner</div>
+          <div class="block-title">Evening Nourishment</div>
+        </div>
+        <div class="block-badge" id="bd-eve">0/8</div>
+      </div>
+      <div class="callout c-amber">
+        <div class="callout-title">⚠ DAO Enzyme Again</div>
+        If high-histamine dinner, take DAO enzyme 15–20 minutes before eating.
+      </div>
+      <div class="items">
+        <div class="item" onclick="tick(this,'eve')" id="i22">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Gluten-Free Dinner</div><div class="item-detail">Avoid: alcohol, aged cheeses, processed meats, high-sodium foods. Chamomile tea with dinner — gentle cortisol reducer.</div></div>
+          <div class="item-tag tag-f">Food</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'eve')" id="i23">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Ashwagandha KSM-66 — 300 mg (evening dose)</div><div class="item-detail">Most important dose. Supports cortisol decline and significantly improves sleep quality.</div></div>
+          <div class="item-tag tag-n">NEW</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'eve')" id="i24">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Horse Chestnut — 50–75 mg Aescin (evening)</div><div class="item-detail">With dinner. Maintain venous tone through the night.</div></div>
+          <div class="item-tag tag-s">Supplement</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'eve')" id="i25">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Gotu Kola — 60 mg (optional evening dose)</div><div class="item-detail">Second dose if tolerated. Can be taken as Gotu Kola tea for a calming evening drink.</div></div>
+          <div class="item-tag tag-n">NEW</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'eve')" id="i26">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Hesperidin &amp; Quercetin (evening dose)</div><div class="item-detail">With dinner. Evening bioflavonoid dose for overnight capillary repair.</div></div>
+          <div class="item-tag tag-s">Supplement</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'eve')" id="i27">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Zinc Sustain — 1 tablet</div><div class="item-detail">Evening. Overnight retinal repair and skin barrier maintenance.</div></div>
+          <div class="item-tag tag-s">Supplement</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'eve')" id="i28">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">L-Theanine — 100–200 mg</div><div class="item-detail">30–60 min before bed. Promotes calm alpha brain-wave state, reduces evening cortisol. No morning grogginess.</div></div>
+          <div class="item-tag tag-n">NEW</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'eve')" id="i29">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Evening Shin Check</div><div class="item-detail">Note colour of petechiae. Red = active; purple/brown = healing. Weekly photo in consistent lighting.</div></div>
+          <div class="item-tag tag-m">Monitor</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NIGHT -->
+    <div class="block t-night">
+      <div class="block-head">
+        <div class="block-icon">🌙</div>
+        <div class="block-meta">
+          <div class="block-time">Before Bed · Wind Down</div>
+          <div class="block-title">Night Protocol</div>
+        </div>
+        <div class="block-badge" id="bd-night">0/5</div>
+      </div>
+      <div class="items">
+        <div class="item" onclick="tick(this,'night')" id="i30">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Sublingual B12 (Methylcobalamin) — 0.5–1 ml</div><div class="item-detail">Under tongue. Confirm form is methylcobalamin. Retinal and nerve protection overnight.</div></div>
+          <div class="item-tag tag-s">Supplement</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'night')" id="i31">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Magnesium Glycinate — 150–200 mg (bedtime)</div><div class="item-detail">Relaxes smooth muscle and promotes deep sleep. Sleep is when retinal and vascular repair happens.</div></div>
+          <div class="item-tag tag-s">Supplement</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'night')" id="i32">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Liquid Calcium + Vitamin D3</div><div class="item-detail">Liquid format. Bone density and vascular tone. Calcium absorbs best at night.</div></div>
+          <div class="item-tag tag-s">Supplement</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'night')" id="i33">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Evening Review — 2 minutes</div><div class="item-detail">Gut transit today? Flush count recorded? Vision stable? Anything unusual to note in journal?</div></div>
+          <div class="item-tag tag-m">Monitor</div>
+        </div>
+        <div class="rule"></div>
+        <div class="item" onclick="tick(this,'night')" id="i34">
+          <div class="cb"><svg viewBox="0 0 12 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4.5,8.5 11,1"/></svg></div>
+          <div class="item-body"><div class="item-name">Chamomile or Passionflower Tea</div><div class="item-detail">Gentle cortisol reducer. Signals the body it is time to rest. Safe and calming every evening.</div></div>
+          <div class="item-tag tag-f">Food</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="reset-btn" onclick="resetAll()">↺ Reset all checkboxes for a new day</button>
+
+  </div>
+</div>
+
+<!-- ════════════════════ MONITOR ════════════════════ -->
+<div class="section" id="s-monitor">
+  <div class="inner">
+
+    <div class="sec-label">Daily Checks</div>
+
+    <div class="mcard">
+      <h3><div class="mcard-icon">👁️</div> Morning Vision Check</h3>
+      <ul class="steps">
+        <li><span class="step-num">1</span>Before getting out of bed, cover your left eye with your hand</li>
+        <li><span class="step-num">2</span>Look at a straight edge — door frame, window frame, or wall corner</li>
+        <li><span class="step-num">3</span>Is the line perfectly straight? Any waviness, blur, or grey patch?</li>
+        <li><span class="step-num">4</span>Switch — cover right eye, repeat with left eye open</li>
+        <li><span class="step-num">5</span>Record result below. Any waviness = flag for naturopath this week</li>
+      </ul>
+      <div class="vision-row">
+        <button class="vision-btn" id="vOk" onclick="setVision('ok')">✓ Clear &amp; Stable</button>
+        <button class="vision-btn" id="vConcern" onclick="setVision('concern')">⚠ Some Waviness</button>
+      </div>
+      <textarea class="journal" id="vNotes" placeholder="Note which eye, describe the waviness, time of day, any other changes..."></textarea>
+    </div>
+
+    <div class="mcard">
+      <h3><div class="mcard-icon">🌡️</div> Hot Flush Counter</h3>
+      <p>Count today's flushes. A reduction over 4–8 weeks confirms the cortisol protocol is working. Each flush is a vascular stress event.</p>
+      <div class="flush-row">
+        <button class="count-btn" onclick="chFlush(-1)">−</button>
+        <div>
+          <div class="count-val" id="flushNum">0</div>
+          <div class="count-lbl">flushes today</div>
+        </div>
+        <button class="count-btn" onclick="chFlush(1)">+</button>
+      </div>
+    </div>
+
+    <div class="mcard">
+      <h3><div class="mcard-icon">🦵</div> Shin Petechiae Check</h3>
+      <ul class="steps">
+        <li><span class="step-num">1</span>Look at lower shin in good natural daylight</li>
+        <li><span class="step-num check">✓</span><span class="green">Purple or brown dots</span> — healing in progress, positive sign</li>
+        <li><span class="step-num warn">!</span><span class="red">Bright red dots</span> — active capillary leakage, note carefully</li>
+        <li><span class="step-num">4</span>Any new red dots today that weren't there yesterday?</li>
+        <li><span class="step-num">5</span>Take a weekly photo — same spot, same light, compare progress</li>
+      </ul>
+      <textarea class="journal" id="shinNotes" placeholder="Today's observation: e.g. 'No new red dots, yesterday's turning brown'..."></textarea>
+    </div>
+
+    <div class="mcard">
+      <h3><div class="mcard-icon">📓</div> Daily Notes</h3>
+      <p>Gut transit, energy, mood, sleep quality, any supplement reactions, general wellbeing.</p>
+      <textarea class="journal" id="genNotes" placeholder="Today's notes..." style="min-height:110px;"></textarea>
+    </div>
+
+    <div class="sec-label">Red Flags — Contact Naturopath</div>
+    <div class="rf-card">
+      <h4>🚨 Seek review if any of these occur</h4>
+      <ul class="steps">
+        <li><span class="step-num warn">!</span><span class="red">New visual waviness or deterioration in either eye</span></li>
+        <li><span class="step-num warn">!</span><span class="red">New bright red petechiae appearing or spreading rapidly</span></li>
+        <li><span class="step-num warn">!</span><span class="red">Significant increase in flush frequency or severity</span></li>
+        <li><span class="step-num warn">!</span><span class="red">Rapid gut transit / dumping episodes</span></li>
+        <li><span class="step-num warn">!</span><span class="red">Any GI reaction to a new supplement in first week</span></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════ TIPS ════════════════════ -->
+<div class="section" id="s-tips">
+  <div class="inner">
+
+    <div class="sec-label">Key Rules</div>
+
+    <div class="tip">
+      <div class="tip-head" style="background:var(--amber-pale);color:#7A4A18;">⏱️ The DAO Timing Rule</div>
+      <div class="tip-body">Take DAO enzyme <strong>15–20 minutes before eating</strong> — not with the meal. It must be present in the gut before histamine-containing food (especially sardines) arrives. This single timing change dramatically improves its effectiveness.</div>
+    </div>
+
+    <div class="tip">
+      <div class="tip-head" style="background:var(--teal-pale);color:var(--teal);">💧 The Fluid Divorce Rule</div>
+      <div class="tip-body">All therapeutic liquids — Glutamine, Magnesium, Liposomal C — taken <strong>strictly 30 minutes away from solid food</strong>. Fat-soluble supplements stay with the sardine meal. Everything else waits.</div>
+    </div>
+
+    <div class="tip">
+      <div class="tip-head" style="background:var(--sage-pale);color:#3A6B40;">🐟 The Sardine Strategy</div>
+      <div class="tip-body">Sardines are not just food — they are the <strong>fat-delivery vehicle</strong> for all fat-soluble supplements. Gotu Kola, Astaxanthin, Lutein/Zeaxanthin, Horse Chestnut, Quercetin, and Sea Buckthorn all need dietary fat to absorb properly.</div>
+    </div>
+
+    <div class="tip">
+      <div class="tip-head" style="background:var(--lav-pale);color:#5A4A8A;">🌿 One New Supplement Per Week</div>
+      <div class="tip-body">Introduce supplements one at a time, one week apart. If there is any reaction, you will know exactly what caused it. Priority order: <strong>Gotu Kola → Bilberry → Rutin → Ashwagandha → Astaxanthin → Lutein/Zeaxanthin.</strong></div>
+    </div>
+
+    <div class="tip">
+      <div class="tip-head" style="background:var(--rose-pale);color:#8A4A4A;">☕ Coffee &amp; CSR</div>
+      <div class="tip-body">Caffeine raises cortisol and is a documented trigger for CSR worsening. Switching to <strong>green tea</strong> (which contains L-theanine to offset the caffeine) or herbal tea is one of the highest-impact single changes for the retinal condition.</div>
+    </div>
+
+    <div class="tip">
+      <div class="tip-head" style="background:var(--teal-pale);color:var(--teal);">🌙 Sleep = Repair</div>
+      <div class="tip-body">Vascular and retinal repair happens during deep sleep. The evening ashwagandha + magnesium glycinate + L-theanine combination is designed to <strong>naturally improve sleep depth</strong>. Better sleep usually precedes visible improvement in petechiae and vision.</div>
+    </div>
+
+    <div class="sec-label">Foods to Prioritise</div>
+    <div class="mcard" style="padding:14px 16px;">
+      <ul class="steps">
+        <li><span class="step-num check">✓</span>Buckwheat (gluten-free, rich in rutin — direct capillary repair)</li>
+        <li><span class="step-num check">✓</span>Blueberries / bilberries (anthocyanins for retinal and vascular health)</li>
+        <li><span class="step-num check">✓</span>Pumpkin seeds (zinc + magnesium — supports supplement protocol)</li>
+        <li><span class="step-num check">✓</span>Olive oil or coconut oil (safe fat sources for supplement absorption — zero amine content)</li>
+        <li><span class="step-num check">✓</span>Turmeric + black pepper (potent anti-inflammatory — add to sardines)</li>
+        <li><span class="step-num check">✓</span>Chamomile or passionflower tea (evening cortisol reduction)</li>
+      </ul>
+    </div>
+
+    <div class="sec-label">Foods to Reduce or Avoid</div>
+    <div class="mcard" style="padding:14px 16px;border-left:4px solid var(--amber);">
+      <ul class="steps">
+        <li><span class="step-num cross">✗</span>Coffee and strong tea (cortisol spike, CSR trigger)</li>
+        <li><span class="step-num cross">✗</span>Avocado (high in dopamine and serotonin — significant amine load, use olive oil or coconut oil instead)</li>
+        <li><span class="step-num cross">✗</span>Alcohol, aged cheeses, processed meats (high histamine)</li>
+        <li><span class="step-num cross">✗</span>High-sodium processed foods (increases lower-limb pressure, worsens petechiae)</li>
+        <li><span class="step-num cross">✗</span>Any gluten — 100% strict, always</li>
+      </ul>
+    </div>
+
+    <div class="sec-label">B12 Serum Target</div>
+    <div class="mcard" style="padding:14px 16px;">
+      <p>Request serum B12 every 3–6 months. Target: <strong style="color:var(--teal)">above 400 pmol/L</strong> for retinal and neurological protection. Many labs flag 'normal' at much lower levels — aim higher. If below 400, increase sublingual dose consistently toward 1 ml daily. Confirm form is <strong>methylcobalamin</strong>.</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ── State ──
+  let flushCount = 0;
+  const totalItems = 35;
+
+  // ── Date ──
+  document.getElementById('hDate').textContent = new Date().toLocaleDateString('en-AU', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+  });
+
+  // ── Navigation ──
+  function show(id) {
+    ['day','monitor','tips'].forEach(s => {
+      document.getElementById('s-'+s).classList.remove('active');
+      document.getElementById('nb-'+s).classList.remove('active');
+    });
+    document.getElementById('s-'+id).classList.add('active');
+    document.getElementById('nb-'+id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // ── Tick item ──
+  function tick(el, group) {
+    el.classList.toggle('done');
+    updateProgress();
+    updateBadge(group);
+  }
+
+  // ── Progress ──
+  function updateProgress() {
+    const done = document.querySelectorAll('#s-day .item.done').length;
+    const total = document.querySelectorAll('#s-day .item').length;
+    const pct = total > 0 ? Math.round(done / total * 100) : 0;
+    document.getElementById('pFill').style.width = pct + '%';
+    document.getElementById('pText').textContent = done + ' of ' + total + ' complete';
+    const banner = document.getElementById('doneBanner');
+    if (done === total && total > 0) {
+      banner.classList.add('show');
+      banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } else {
+      banner.classList.remove('show');
+    }
+  }
+
+  // ── Badge per group ──
+  const groupMap = {
+    dawn:      { badge: 'bd-dawn',      items: ['i0','i1','i2'] },
+    breakfast: { badge: 'bd-breakfast', items: ['i3','i4','i5','i6','i7','i8','i9','i10','i11','i12'] },
+    midmorn:   { badge: 'bd-midmorn',   items: ['i13','i14','i15'] },
+    midday:    { badge: 'bd-midday',    items: ['i16','i17','i18'] },
+    aft:       { badge: 'bd-aft',       items: ['i19','i20','i21'] },
+    eve:       { badge: 'bd-eve',       items: ['i22','i23','i24','i25','i26','i27','i28','i29'] },
+    night:     { badge: 'bd-night',     items: ['i30','i31','i32','i33','i34'] },
+  };
+  function updateBadge(group) {
+    const g = groupMap[group];
+    if (!g) return;
+    const done = g.items.filter(id => document.getElementById(id).classList.contains('done')).length;
+    document.getElementById(g.badge).textContent = done + '/' + g.items.length;
+  }
+
+  // ── Reset ──
+  function resetAll() {
+    document.querySelectorAll('#s-day .item.done').forEach(el => el.classList.remove('done'));
+    Object.keys(groupMap).forEach(g => updateBadge(g));
+    updateProgress();
+    flushCount = 0;
+    document.getElementById('flushNum').textContent = '0';
+    document.getElementById('vOk').className = 'vision-btn';
+    document.getElementById('vConcern').className = 'vision-btn';
+    document.getElementById('vNotes').value = '';
+    document.getElementById('shinNotes').value = '';
+    document.getElementById('genNotes').value = '';
+  }
+
+  // ── Flush counter ──
+  function chFlush(n) {
+    flushCount = Math.max(0, flushCount + n);
+    document.getElementById('flushNum').textContent = flushCount;
+  }
+
+  // ── Vision ──
+  function setVision(state) {
+    document.getElementById('vOk').className = 'vision-btn' + (state === 'ok' ? ' ok' : '');
+    document.getElementById('vConcern').className = 'vision-btn' + (state === 'concern' ? ' concern' : '');
+  }
+
+  // ── Init ──
+  updateProgress();
+</script>
+</body>
+</html>
